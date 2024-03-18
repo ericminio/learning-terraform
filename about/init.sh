@@ -19,7 +19,7 @@ function test_init {
 function test_apply {
     clean
     terraform-cli init > output
-    terraform-cli apply --auto-approve >> output
+    terraform-cli apply --auto-approve -var="who=World" >> output
     local ok=`cat output | grep "Hello World" | wc -l`
     
     assertequals $ok 2
