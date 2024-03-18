@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./support/cli.sh
+
 function clean {
     rm -rf $(pwd)/services/.terraform
     rm $(pwd)/services/.terraform*
@@ -8,7 +10,7 @@ function clean {
 
 function test_init {
     clean
-    docker run -i -v $(pwd)/services:/usr/local/src hashicorp/terraform:1.5.7 -chdir=/usr/local/src init > output
+    terraform-cli init > output
     local ok=`cat output | grep "Terraform has been successfully initialized" | wc -l`
     
     assertequals $ok 1
@@ -16,8 +18,8 @@ function test_init {
 
 function test_apply {
     clean
-    docker run -i -v $(pwd)/services:/usr/local/src hashicorp/terraform:1.5.7 -chdir=/usr/local/src init > output
-    docker run -i -v $(pwd)/services:/usr/local/src hashicorp/terraform:1.5.7 -chdir=/usr/local/src apply --auto-approve >> output
+    terraform-cli init > output
+    terraform-cli apply --auto-approve >> output
     local ok=`cat output | grep "Hello World" | wc -l`
     
     assertequals $ok 2
