@@ -6,6 +6,7 @@ function clean {
     rm -rf $(pwd)/services/.terraform
     rm $(pwd)/services/.terraform*
     rm $(pwd)/services/terraform*
+    rm output
 }
 
 function test_init {
@@ -16,11 +17,11 @@ function test_init {
     assertequals $ok 1
 }
 
-function test_apply {
+function test_plan_can_help_to_inspect_variable_values {
     clean
     terraform-cli init > output
-    terraform-cli apply --auto-approve -var="who=World" >> output
-    local ok=`cat output | grep "Hello World" | wc -l`
+    terraform-cli plan -var="who=World" >> output
+    local ok=`cat output | grep "greetings = \"Hello World\"" | wc -l`
     
-    assertequals $ok 2
+    assertequals $ok 1
 }
